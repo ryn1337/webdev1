@@ -1,18 +1,8 @@
 pipeline {
   agent any
-  options {
-    // Deaktiviert das automatische 'Declarative: Checkout SCM'
-    skipDefaultCheckout(true)
-  }
 
   stages {
-    stage('Checkout') {
-      steps {
-        // Hier wird nur dein Branch 'main' geholt
-        git branch: 'main', url: 'https://github.com/ryn1337/webdev1.git'
-      }
-    }
-
+    // KEINE Checkout-Stage mehr
     stage('Build') {
       steps {
         sh 'docker compose build'
