@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 1) Backend-Service
+  backend:
+    build: ./backend
+    # Falls du deine Dockerfile umbenannt hast, nutze 'dockerfile: Dockerfile'
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+      - elasticsearch
+    # Optional: environment:
+    #   - NODE_ENV=production
+
+  # 2) Frontend-Service
+  frontend:
+    build: ./frontend/frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  # 3) PostgreSQL-Service
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 4) Elasticsearch-Service
+  elasticsearch:
+    image: elasticsearch:8.10.2
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+
+volumes:
+  postgres_data:
