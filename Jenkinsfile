@@ -4,29 +4,28 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        // Jenkins klont dein Repo
-        git 'https://github.com/ryn1337/webdev1.git'
+        // Jenkins klont deine main-Branch von GitHub
+        git branch: 'main', url: 'https://github.com/ryn1337/webdev1.git'
       }
     }
 
     stage('Build') {
       steps {
-        // Docker Compose Build
+        // Baut alle Images, die in der docker-compose.yml definiert sind
         sh 'docker compose build'
       }
     }
 
     stage('Test') {
       steps {
-        // Startet Backend im Container + führt "npm test" aus
-        // (falls du einen Test-Script in package.json hast)
+        // Startet den Container "backend" und führt "npm test" aus
         sh 'docker compose run backend npm test'
       }
     }
 
     stage('Deploy') {
       steps {
-        // Docker Compose Up => startet alle Container (Backend, Frontend, DB, etc.)
+        // Startet alle Services (Backend, Frontend, DB etc.) im Hintergrund
         sh 'docker compose up -d'
       }
     }
